@@ -1,9 +1,5 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+
 <html>
 <head>
     <script src="/jquery-3.2.1.min.js"></script>
@@ -15,10 +11,9 @@ and open the template in the editor.
 </head>
 <body>
 <div class="container">
-    <input class="btn btn-outline-primary" type="submit" value="Добавить запись" onclick="open()">
-    <!--<button onclick="open()" class="btn btn-outline-primary">Добавить запись</button>-->
-    <button type="button" class="btn btn-outline-success">Поиск по записям</button>
-    <form class="add" action="servlet?action=insert" method="post">
+    <input class="btn btn-outline-primary" type="submit" value="Добавить запись в справочник" onclick="openfeed('_add')">
+    <input class="btn btn-outline-success" type="submit" value="Поиск по справочнику" onclick="openfeed('_srh')">
+    <form class="feed_add" style="display: none" action="servlet?action=insert" method="post">
         <div>
             <h3>Добавить информацию в справочник "Информация о страховых организациях"</h3>
         </div>
@@ -52,43 +47,44 @@ and open the template in the editor.
             </div>
         </div>
     </form>
-    <h4>Поиск по справочнику</h4>
-    <h5>Введите параметры поиска</h5>
-    <form action="javascript:Ajax()">
-        <div class="form-group">
-            <label>ИНН</label>
-            <input type="text" class="form-control" id="searchInn">
-        </div>
-        <div class="form-group">
-            <label>ОГРН</label>
-            <input type="text" class="form-control" name="searchOgrn">
-        </div>
-        <div class="form-group">
-            <label>Наименование</label>
-            <input type="text" class="form-control" name="searchName">
-        </div>
-        <div class="form-group">
-            <label>Адресс</label>
-            <input type="text" class="form-control" name="searchAddress">
-        </div>
-        <div class="offset-sm-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">Поиск</button>
-        </div>
-    </form>
-    <h3>Результаты поиска</h3>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>ИНН</th>
-            <th>ОГРН</th>
-            <th>Наименование</th>
-            <th>Адресс</th>
-        </tr>
-        </thead>
-        <tbody id="append">
-        </tbody>
-    </table>
+    <div class="feed_srh" style="display: none;">
+        <h4>Поиск по справочнику</h4>
+        <h5>Введите параметры поиска</h5>
+        <form action="javascript:Ajax()">
+            <div class="form-group">
+                <label>ИНН</label>
+                <input type="text" class="form-control" id="searchInn">
+            </div>
+            <div class="form-group">
+                <label>ОГРН</label>
+                <input type="text" class="form-control" id="searchOgrn">
+            </div>
+            <div class="form-group">
+                <label>Наименование</label>
+                <input type="text" class="form-control" id="searchName">
+            </div>
+            <div class="form-group">
+                <label>Адресс</label>
+                <input type="text" class="form-control" id="searchAddress">
+            </div>
+            <div class="offset-sm-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Поиск</button>
+            </div>
+        </form>
+        <h3>Результаты поиска</h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>Наименование</th>
+                <th>ИНН</th>
+                <th>ОГРН</th>
+                <th>Адресс</th>
+            </tr>
+            </thead>
+            <tbody id="append">
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     function Ajax() {
@@ -96,7 +92,7 @@ and open the template in the editor.
         console.log("aa" + selector);
         console.log("Ajx2222");
         var formData = {
-            searchInn: $("#searchInn").val(),
+            searchInn: $("#searchInn").val(),  //формирование данных с формы
             searchOgrn: $("#searchOgrn").val(),
             searchName: $("#searchName").val(),
             searchAddress: $("#searchAddress").val(),
@@ -108,30 +104,22 @@ and open the template in the editor.
             response: "json",
             data: formData,
             success: function (data, textStatus) {
-                console.log("success");
-                console.log("obj " + data);
                 var selector = $('#append');
-                data.forEach(function (obj) {
-                    selector.append($('<tr><td>' + obj.ID + '</td>' + '<td>' + obj.INN + '</td><td>'+ obj.OGRN +'</td><td>' + obj.NAME + '</td><td>' + obj.ADRESS + '</td><tr/>'));
+                data.forEach(function (obj) { //вывод в таблицу html
+                    selector.append($('<tr><td>' + obj.NAME + '</td><td>' + obj.INN + '</td><td>'+ obj.OGRN +'</td><td>' + obj.ADRESS + '</td><tr/>'));
                 });
 
             }
         })
-//                console.log("Ajx??");
-//                var selector = $('#append');
-//                selector.append($('<tr><td>'+json.id+'</td>' +
-//                    '<td>'+json.Inn+'</td><td>\'+json.Ogrn+\'</td><td>\'+json.Name+\'</td><td>\'+json.Address+\'</td><tr/>'));
     }
 </script>
 <script>
-    function open() {
-        var output = document.getElementsByClassName('add'),
-            click = output[0].style;
-        if (click.display == 'none') {
-            click.display = 'block';
-        } else {
-            click.display = 'none';
-        }
+    function openfeed(ingname) {
+        var output = document.getElementsByClassName('feed'+ingname),
+            out = output[0].style;
+        if (out.display == 'none') {
+            out.display='block';
+        } else {out.display='none';}
     }
 </script>
 <!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>-->

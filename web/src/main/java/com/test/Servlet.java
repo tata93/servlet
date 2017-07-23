@@ -1,10 +1,8 @@
 package com.test;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.io.PrintWriter;
 import java.io.IOException;
 import java.rmi.server.ExportException;
@@ -22,9 +20,9 @@ public class Servlet extends HttpServlet {
     Servlet(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
+//добавление информации в БД
     private void serviceInner(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String INN = request.getParameter("INN");
+        String INN = request.getParameter("INN"); // определение переменных
         String OGRN = request.getParameter("OGRN");
         String name = request.getParameter("name");
         String address = request.getParameter("address");
@@ -33,42 +31,31 @@ public class Servlet extends HttpServlet {
             sql = "INSERT INTO ORG VALUES (null, " + INN + ", " + OGRN + ", " + name + ", " + address + ")";
             jdbcTemplate.update(sql);
         } else {
-            response.sendRedirect("index.html");
+
         }
         response.setContentType("text/html;charset=UTF-8");
     }
 
     private void serviceSearch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // поиск по базе
         PrintWriter out = response.getWriter();
         try {
-            String searchInn = request.getParameter("searchInn");
+            String searchInn = request.getParameter("searchInn");//определение переменных
             String searchOgrn = request.getParameter("searchOgrn");
             String searchName = request.getParameter("searchName");
             String searchAddress = request.getParameter("searchAddress");
             String sql = null;
-            if (null == searchInn) {
-                if (searchOgrn == null) {
-                    if (searchName == null) {
-                        if (searchAddress == null) {
-                             response.sendRedirect("index.html");
-                        } else {
-                            sql = "SELECT * FROM ORG WHERE ADRESS = " + searchAddress;
-                        }
-                    } else {
-                        sql = "SELECT * FROM ORG WHERE TITLE = " + searchName;
-                    }
-                } else {
-                    sql = "SELECT * FROM ORG WHERE OGRN = " + searchOgrn;
-                }
-            } else {
-                sql = "SELECT * FROM ORG WHERE INN = " + searchInn;
-            }
-            String json = new Gson().toJson(jdbcTemplate.queryForList(sql));
+            if ((searchInn.isEmpty()) &&( searchOgrn.isEmpty()) && (searchName.isEmpty()) && (searchAddress.isEmpty())) {
+                response.sendRedirect("index.html"); // в случае пустых полей вывод реьд формы
+            } else { //формирование запроса
+            sql = "SELECT * FROM ORG WHERE INN LIKE \"%" + searchInn + "%\" AND " + "OGRN LIKE \"%" + searchOgrn + "%\" AND " + "NAME LIKE \"%" + searchName + "%\" AND " + "ADRESS LIKE \"%" + searchAddress +"%\"";
+            String json = new Gson().toJson(jdbcTemplate.queryForList(sql));//формирование JSON
             response.setContentType("application/json;charset=UTF-8");
-            out.print(json);
-        } catch (ExportException e) {
+            out.print(json);}
+        } catch (Exception e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             out.close();
         }
     }
@@ -83,9 +70,9 @@ public class Servlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         if (request.getParameter("action").equals("search")) {
-            serviceSearch(request, response);
+            serviceSearch(request, response); //сработает если осуществлять поиск по базе
         } else if (request.getParameter("action").equals("insert")) {
-            serviceInner(request, response);
+            serviceInner(request, response); //сработает если добавлять информацию
             response.sendRedirect("index.html");
         } else {
             response.sendRedirect("index.html");
