@@ -11,93 +11,92 @@
 </head>
 <body>
 <div class="container">
-    <input class="btn btn-outline-primary" type="submit" value="Добавить запись" onclick="open()">
-    <!--<button onclick="open()" class="btn btn-outline-primary">Добавить запись</button>-->
-    <button type="button" class="btn btn-outline-success">Поиск по записям</button>
-    <form class="add" action="servlet?action=insert" method="post">
-        <div>
-            <h3>Добавить информацию в справочник "Информация о страховых организациях"</h3>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">INN</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="INN">
+    <input class="btn btn-outline-primary" type="submit" value="Добавить запись в справочник" onclick="openfeed('_add')">
+    <input class="btn btn-outline-success" type="submit" value="Поиск по справочнику" onclick="openfeed('_srh')">
+    
+        <form class="feed_add" style="display: none;" action="servlet?action=insert" method="post">
+            <div>
+                <h3>Добавить информацию в справочник "Информация о страховых организациях"</h3>
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">OGRN</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="OGRN">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">INN</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="INN">
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Наименование</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="name">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">OGRN</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="OGRN">
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Адресс</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" name="address">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Наименование</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="name">
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">Адресс</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="address">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Добавить информацию об организации</button>
+                </div>
+            </div>
+        </form>
+    <div class="feed_srh" style="display: none;">
+        <form  action="javascript:Ajax()">
+        <h4>Поиск по справочнику</h4>
+        <h5>Введите параметры поиска</h5>
+            <div class="form-group INN" style="display: none;">
+                <label>ИНН</label>
+                <input type="text" class="form-control" id="searchInn">
+            </div>
+            <div class="form-group">
+                <label>ОГРН</label>
+                <input type="text" class="form-control" id="searchOgrn">
+            </div>
+            <div class="form-group">
+                <label>Наименование</label>
+                <input type="text" class="form-control" id="searchName">
+            </div>
+            <div class="form-group">
+                <label>Адресс</label>
+                <input type="text" class="form-control" id="searchAddress">
+            </div>
             <div class="offset-sm-2 col-sm-10">
-                <button type="submit" class="btn btn-primary">Добавить информацию об организации</button>
+                <button type="submit" class="btn btn-primary">Поиск</button>
             </div>
-        </div>
-    </form>
-    <h4>Поиск по справочнику</h4>
-    <h5>Введите параметры поиска</h5>
-    <form action="javascript:Ajax()">
-        <div class="form-group">
-            <label>ИНН</label>
-            <input type="text" class="form-control" id="searchInn">
-        </div>
-        <div class="form-group">
-            <label>ОГРН</label>
-            <input type="text" class="form-control" name="searchOgrn">
-        </div>
-        <div class="form-group">
-            <label>Наименование</label>
-            <input type="text" class="form-control" name="searchName">
-        </div>
-        <div class="form-group">
-            <label>Адресс</label>
-            <input type="text" class="form-control" name="searchAddress">
-        </div>
-        <div class="offset-sm-2 col-sm-10">
-            <button type="submit" class="btn btn-primary">Поиск</button>
-        </div>
-    </form>
-    <h3>Результаты поиска</h3>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>ИНН</th>
-            <th>ОГРН</th>
-            <th>Наименование</th>
-            <th>Адресс</th>
-        </tr>
-        </thead>
-        <tbody id="append">
-        </tbody>
-    </table>
+        </form>
+        <h3>Результаты поиска</h3>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>ИНН</th>
+                <th>ОГРН</th>
+                <th>Наименование</th>
+                <th>Адресс</th>
+            </tr>
+            </thead>
+            <tbody id="append">
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     function Ajax() {
         var selector = $('#append');
-        console.log("aa" + selector);
-        console.log("Ajx2222");
         var formData = {
             searchInn: $("#searchInn").val(),
             searchOgrn: $("#searchOgrn").val(),
             searchName: $("#searchName").val(),
             searchAddress: $("#searchAddress").val(),
         };
-
         $.ajax({
             type: 'post',
             url: 'servlet?action=search',
@@ -110,21 +109,18 @@
                 data.forEach(function (obj) {
                     selector.append($('<tr><td>' + obj.ID + '</td>' + '<td>' + obj.INN + '</td><td>'+ obj.OGRN +'</td><td>' + obj.NAME + '</td><td>' + obj.ADRESS + '</td><tr/>'));
                 });
-
             }
         })
     }
 </script>
 <script>
-    function open() {
-        var output = document.getElementsByClassName('add'),
-            click = output[0].style;
-        if (click.display == 'none') {
-            click.display = 'block';
-        } else {
-            click.display = 'none';
-        }
-    }
+function openfeed(ingname) {
+  var output = document.getElementsByClassName('feed'+ingname),
+      out = output[0].style;
+  if (out.display == 'none') {
+    out.display='block';
+  } else {out.display='none';}
+}
 </script>
 <!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
