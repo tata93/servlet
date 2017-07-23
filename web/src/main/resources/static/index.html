@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="/jquery-3.2.1.min.js"></script>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+          integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <input class="btn btn-outline-primary" type="submit" value="Добавить запись" onclick="open()">
+    <!--<button onclick="open()" class="btn btn-outline-primary">Добавить запись</button>-->
+    <button type="button" class="btn btn-outline-success">Поиск по записям</button>
+    <form class="add" action="servlet?action=insert" method="post">
+        <div>
+            <h3>Добавить информацию в справочник "Информация о страховых организациях"</h3>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">INN</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="INN">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">OGRN</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="OGRN">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Наименование</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="name">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Адресс</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" name="address">
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="offset-sm-2 col-sm-10">
+                <button type="submit" class="btn btn-primary">Добавить информацию об организации</button>
+            </div>
+        </div>
+    </form>
+    <h4>Поиск по справочнику</h4>
+    <h5>Введите параметры поиска</h5>
+    <form action="javascript:Ajax()">
+        <div class="form-group">
+            <label>ИНН</label>
+            <input type="text" class="form-control" id="searchInn">
+        </div>
+        <div class="form-group">
+            <label>ОГРН</label>
+            <input type="text" class="form-control" name="searchOgrn">
+        </div>
+        <div class="form-group">
+            <label>Наименование</label>
+            <input type="text" class="form-control" name="searchName">
+        </div>
+        <div class="form-group">
+            <label>Адресс</label>
+            <input type="text" class="form-control" name="searchAddress">
+        </div>
+        <div class="offset-sm-2 col-sm-10">
+            <button type="submit" class="btn btn-primary">Поиск</button>
+        </div>
+    </form>
+    <h3>Результаты поиска</h3>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>ИНН</th>
+            <th>ОГРН</th>
+            <th>Наименование</th>
+            <th>Адресс</th>
+        </tr>
+        </thead>
+        <tbody id="append">
+        </tbody>
+    </table>
+</div>
+<script>
+    function Ajax() {
+        var selector = $('#append');
+        console.log("aa" + selector);
+        console.log("Ajx2222");
+        var formData = {
+            searchInn: $("#searchInn").val(),
+            searchOgrn: $("#searchOgrn").val(),
+            searchName: $("#searchName").val(),
+            searchAddress: $("#searchAddress").val(),
+        };
+
+        $.ajax({
+            type: 'post',
+            url: 'servlet?action=search',
+            response: "json",
+            data: formData,
+            success: function (data, textStatus) {
+                console.log("success");
+                console.log("obj " + data);
+                var selector = $('#append');
+                data.forEach(function (obj) {
+                    selector.append($('<tr><td>' + obj.ID + '</td>' + '<td>' + obj.INN + '</td><td>'+ obj.OGRN +'</td><td>' + obj.NAME + '</td><td>' + obj.ADRESS + '</td><tr/>'));
+                });
+
+            }
+        })
+    }
+</script>
+<script>
+    function open() {
+        var output = document.getElementsByClassName('add'),
+            click = output[0].style;
+        if (click.display == 'none') {
+            click.display = 'block';
+        } else {
+            click.display = 'none';
+        }
+    }
+</script>
+<!--<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"
+        integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+        integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+        crossorigin="anonymous"></script>
+</body>
+</html>
